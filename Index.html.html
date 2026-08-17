@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rotina Marina</title>
+<style>
+:root{--bg:#fff8fc;--ink:#4b3e4a;--mut:#8e7d8b;--line:#f0dce8;--pink:#f4b4cc;--lilac:#d7c9ff;--mint:#c8ead9;--shadow:0 14px 32px #c89ab51f}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at 0 0,#e9e1ff 0,transparent 28%),linear-gradient(#fffafd,#fff7fb);color:var(--ink)}
+main{max-width:720px;margin:auto;padding:18px 15px 40px}
+.hero{padding:25px 21px;border-radius:29px;background:linear-gradient(135deg,var(--pink),var(--lilac) 58%,var(--mint));box-shadow:var(--shadow)}
+.ey{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:#765b6d}.hero h1{font-size:33px;line-height:1.02;letter-spacing:-.05em;margin:8px 0}.hero p{margin:0;color:#665664}
+.pill{display:inline-block;margin-top:13px;background:#ffffff8c;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800}
+h2{font-size:21px;margin:22px 2px 10px}.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:17px;box-shadow:var(--shadow)}
+.mission{padding:13px 14px;border-radius:16px;background:linear-gradient(135deg,#fff0f6,#f3efff);font-size:13px;margin-bottom:6px}.mission b{display:block}.mission span{display:block;color:var(--mut);margin-top:3px}
+.ex{display:grid;grid-template-columns:35px 1fr auto;gap:11px;align-items:center;padding:14px 0;border-bottom:1px solid #f4e9ef}.ex:last-child{border-bottom:0}
+.n{width:32px;height:32px;border-radius:11px;display:grid;place-items:center;background:#fff0f6;color:#8c6178;font-weight:900}.ex b{font-size:14px}.ex small{display:block;color:var(--mut);margin-top:3px;font-size:11px}.target{text-align:right;font-size:11px;font-weight:850}
+.run{padding:13px;border:1px solid #f0dfe9;background:#fffafd;border-radius:15px;margin-top:10px}.run b{display:block}.run small{display:block;color:var(--mut);margin-top:3px;line-height:1.4}.speed{display:inline-block;margin-top:6px;padding:5px 8px;border-radius:999px;background:#fce8f1;color:#8f6079;font-size:11px;font-weight:900}
+.note{margin-top:13px;background:#fff7dc;border:1px solid #f1e5ba;padding:12px 13px;border-radius:15px;font-size:12px;line-height:1.45;color:#6b5c54}
+footer{text-align:center;color:var(--mut);font-size:11px;margin-top:20px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 8px;margin-top:18px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;font-size:12px;font-weight:850;color:var(--mut);box-shadow:0 6px 18px #c89ab514}
+.tab.active{background:linear-gradient(135deg,#f4b4cc,#d7c9ff);color:#604a59;border-color:#d7b8ca}
+.viewhead{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:22px 2px 10px}
+.viewhead h2{margin:0}.viewhead span{font-size:11px;color:var(--mut)}
+</style>
+</head>
+<body>
+<main>
+<section class="hero">
+<div class="ey">Rotina Marina · Bloco 2</div>
+<h1 id="title">Treino do dia</h1>
+<p id="sub"></p>
+<span class="pill" id="date"></span>
+</section>
+<div class="tabs" id="tabs"></div>
+<div class="viewhead"><h2 id="viewTitle">Seu treino de hoje</h2><span id="viewHint">abre já no treino do dia</span></div>
+<section class="card" id="content"></section>
+<footer>Abra, confira e treine. Sem preencher nada.</footer>
+</main>
+<script>
+const START=new Date('2026-08-17T12:00:00');
+const RUN={
+1:{a:['6 min corrida + 1 min caminhada ×4','6,6 km/h','5,5 km/h'],b:['3 min leve + 2 min moderado ×5','6,6 → 6,9 km/h','5,5 km/h']},
+2:{a:['7 min corrida + 1 min caminhada ×4','6,6 km/h','5,5 km/h'],b:['4 min leve + 2 min moderado ×5','6,6 → 7,0 km/h','5,5 km/h']},
+3:{a:['8 min corrida + 1 min caminhada ×4','6,6–6,7 km/h','5,5 km/h'],b:['5 min leve + 2 min moderado ×4','6,7 → 7,0 km/h','5,5 km/h']},
+4:{a:['10 min corrida + 1 min caminhada ×3','6,7 km/h','5,5 km/h'],b:['6 min leve + 3 min moderado ×4','6,7 → 7,0 km/h','5,5 km/h']},
+5:{a:['12 min corrida + 1 min caminhada ×3','6,7 km/h','5,5 km/h'],b:['8 min leve + 3 min moderado ×3','6,7 → 7,1 km/h','5,5 km/h']},
+6:{a:['15 min corrida + 1 min caminhada ×2','6,7–6,8 km/h','5,5 km/h'],b:['10 min leve + 3 min moderado ×3','6,7 → 7,1 km/h','5,5 km/h']},
+7:{a:['20 min contínuos + 2 min caminhada + 10 min corrida','6,8 km/h','5,5 km/h'],b:['12 min leve + 4 min moderado ×2','6,8 → 7,1 km/h','5,5 km/h']},
+8:{a:['30 min contínuos','6,8–6,9 km/h','—'],b:['5 km controlados','6,8 → 7,0–7,2 km/h','—']}
+};
+const P={
+1:{t:'Glúteo + Posterior',m:'Construir glúteo com tensão e posterior.',e:[['Hip Thrust / Glute Drive','4×6–8','RIR 2 · 2 min'],['RDL com halteres','3×8–10','RIR 2 · 2 min'],['Mesa flexora','3×10–12','RIR 1–2 · 90 s'],['Búlgaro com passada longa','3×8–10/cada','RIR 2 · 90 s'],['Abdutora','3×15–20','RIR 1 · 60 s'],['Extensão de quadril na polia','2×12–15/cada','RIR 1–2 · 60 s']],n:'Se o RDL incomodar a lombar, troque a variação em vez de insistir.'},
+2:{t:'Costas + Ombros',m:'Costas desenhadas + ombrinho de cebola.',e:[['Puxada alta neutra','3×8–10','RIR 2 · 90 s'],['Remada máquina com peito apoiado','3×8–10','RIR 2 · 90 s'],['Remada unilateral na polia','2×10–12','RIR 2 · 75 s'],['Elevação lateral na polia','4×12–15','RIR 1–2 · 60 s'],['Desenvolvimento máquina','3×8–10','RIR 2 · 90 s'],['Crucifixo inverso máquina','3×12–15','RIR 1 · 60 s'],['Rosca martelo','2×10–12','RIR 1–2 · 60 s']]},
+3:{t:'RUN A · Resistência',m:'Aumentar o tempo correndo sem freestyle.',r:'a'},
+4:{t:'Pernas + Glúteo',m:'Coxas fortes e definidas sem esquecer o glúteo.',e:[['Hack Squat','4×6–10','RIR 2 · 2 min'],['Leg Press 45°','3×10–12','RIR 2 · 2 min'],['Afundo reverso no Smith','3×10/cada','RIR 2 · 90 s'],['Cadeira extensora','3×12–15','RIR 1 · 75 s'],['Cadeira flexora','3×10–12','RIR 1–2 · 75 s'],['Abdutora','2×15–20','RIR 1 · 60 s'],['Panturrilha','3×10–15','RIR 1 · 60 s']]},
+5:{t:'Ombros + Braços',m:'Deltoide lateral/posterior em prioridade. CEBOLA.',e:[['Elevação lateral máquina','4×10–15','RIR 1–2 · 60–75 s'],['Desenvolvimento com halteres','3×8–10','RIR 2 · 90 s'],['Elevação lateral unilateral na polia','3×12–15','RIR 1 · 60 s'],['Crucifixo inverso na polia','3×12–15','RIR 1–2 · 60 s'],['Tríceps corda','3×10–12','RIR 1–2 · 60 s'],['Rosca Scott máquina','3×10–12','RIR 1–2 · 60 s']]},
+6:{t:'Glúteo 2',m:'Glúteo cheio + volume e acabamento.',e:[['Pendulum Squat','3×8–10','RIR 2 · 2 min'],['Hip Thrust / Glute Drive','3×10–12','RIR 1–2 · 90 s'],['Step-up alto','3×10/cada','RIR 2 · 90 s'],['Flexora sentada','3×12–15','RIR 1 · 75 s'],['Abdutora','3×15–25','RIR 0–1 · 60 s'],['Kickback na polia','2×12–15/cada','RIR 1 · 60 s']]},
+0:{t:'RUN B · Ritmo',m:'Aprender a correr em ritmos diferentes sem ir ao limite.',r:'b'}
+};
+function week(){return Math.max(1,Math.min(8,Math.floor((new Date()-START)/604800000)+1))}
+const ORDER=[
+ {d:1,l:'Seg · Glúteo'},
+ {d:2,l:'Ter · Costas/Ombros'},
+ {d:3,l:'Qua · RUN A'},
+ {d:4,l:'Qui · Pernas'},
+ {d:5,l:'Sex · Ombros/Braços'},
+ {d:6,l:'Sáb · Glúteo 2'},
+ {d:0,l:'Dom · RUN B'}
+];
+let selectedDay=new Date().getDay();
+
+function renderTabs(){
+ const el=document.getElementById('tabs');
+ el.innerHTML=ORDER.map(x=>`<button class="tab ${x.d===selectedDay?'active':''}" onclick="selectDay(${x.d})">${x.l}</button>`).join('');
+}
+
+function selectDay(d){
+ selectedDay=d;
+ renderTabs();
+ renderPlan();
+}
+
+function renderPlan(){
+ const today=new Date().getDay();
+ const p=P[selectedDay];
+ title.textContent=p.t;
+ sub.textContent=p.m;
+
+ if(selectedDay===today){
+   date.textContent='Hoje · '+new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'2-digit',month:'long'}).format(new Date());
+   viewTitle.textContent='Seu treino de hoje';
+   viewHint.textContent='abre já no treino do dia';
+ }else{
+   const dayName=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'][selectedDay];
+   date.textContent=dayName;
+   viewTitle.textContent='Ficha completa';
+   viewHint.textContent='você está vendo outro dia';
+ }
+
+ let h=`<div class="mission"><b>Missão</b><span>${p.m}</span></div>`;
+ if(p.r){
+   const w=week(),r=RUN[w][p.r];
+   h+=`<div class="run"><b>Aquecimento</b><small>5 min caminhada leve</small><span class="speed">5,5 km/h</span></div>
+   <div class="run"><b>Bloco principal · Semana ${w}</b><small>${r[0]}</small><span class="speed">${r[1]}</span></div>`;
+   if(r[2]!=='—')h+=`<div class="run"><b>Recuperação</b><small>Caminhada entre os blocos</small><span class="speed">${r[2]}</span></div>`;
+   h+=`<div class="run"><b>Desaquecimento</b><small>5 min caminhada leve</small><span class="speed">5,0–5,5 km/h</span></div>
+   <div class="note">Sem freestyle: se estiver fácil, conclua como prescrito. A progressão acontece no próximo treino equivalente.</div>`;
+ }else{
+   p.e.forEach((x,i)=>h+=`<div class="ex"><div class="n">${i+1}</div><div><b>${x[0]}</b><small>${x[2]}</small></div><div class="target">${x[1]}</div></div>`);
+   if(p.n)h+=`<div class="note">${p.n}</div>`;
+ }
+ content.innerHTML=h;
+}
+
+function render(){
+ renderTabs();
+ renderPlan();
+}
+render();
+</script>
+</body>
+</html>
